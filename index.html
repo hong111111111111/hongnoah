@@ -454,8 +454,8 @@
 
     /* 사진 더 작게 */
     .runner-img {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       border-radius: 999px;
       object-fit: cover;
       background: #111827;
@@ -538,6 +538,32 @@
       to {
         transform: translateX(-50%) translateY(-4px);
         opacity: 0.7;
+      }
+    }
+
+    /* 바나나 슬립 이펙트 */
+    .horse.slipping {
+      border-color: rgba(250, 204, 21, 0.9);
+      opacity: 0.95;
+    }
+
+    .horse.slipping::after {
+      content: "🍌";
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      filter: drop-shadow(0 0 5px rgba(15, 23, 42, 0.9));
+      animation: slipShake 0.25s ease-in-out infinite alternate;
+    }
+
+    @keyframes slipShake {
+      from {
+        transform: translateX(-54%) translateY(0);
+      }
+      to {
+        transform: translateX(-46%) translateY(-3px);
       }
     }
 
@@ -678,8 +704,8 @@
     }
 
     .rank-photo {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       border-radius: 999px;
       object-fit: cover;
       border: 2px solid rgba(248, 250, 252, 0.9);
@@ -797,9 +823,9 @@
             <li>러너 이름을 한 줄에 하나씩 입력합니다.</li>
             <li>원하면 이미지 파일을 여러 개 선택해 순서대로 매칭합니다.</li>
             <li>레이스 중에는 <b>사진/이모지만</b> 보이고, 이름은 결과창에서만 표시됩니다.</li>
-            <li>각 러너마다 <b>2~3번 불꽃 부스터(🔥)</b>와 <b>1번 부상(🩹) 이벤트</b>가 발생합니다.</li>
-            <li>레이스 후반부에는 반드시 한 번, <b>부상 또는 초강력 부스터</b>로 역전극이 일어나도록 설계했습니다.</li>
-            <li>1등이 결승선을 통과하면 트랙 위에서 폭죽 가루가 터지고, 4등까지 들어오면 레이스가 종료됩니다.</li>
+            <li>각 러너마다 <b>2~3번 불꽃 부스터(🔥)</b>, <b>1번 부상(🩹)</b>, <b>바나나 슬립(🍌)</b> 이벤트가 있습니다.</li>
+            <li>레이스 후반부에는 반드시 한 번, 부상 또는 초강력 부스터로 <b>막판 역전극</b>이 일어나도록 설계했습니다.</li>
+            <li>결승선 통과 시에는 선수들 간에 <b>항상 거리 차이</b>가 나게 골인합니다.</li>
           </ul>
 
           <div class="mode-section">
@@ -1012,7 +1038,6 @@
           horse.appendChild(emojiSpan);
         }
 
-        // 이름은 데이터로만 보관, 화면에서는 숨김
         const nameSpan = document.createElement("span");
         nameSpan.className = "horse-name";
         nameSpan.textContent = name;
@@ -1022,7 +1047,7 @@
         row.appendChild(horse);
         tracksEl.appendChild(row);
 
-        const triggerCount = 2 + Math.floor(Math.random() * 2); // 2 또는 3회 부스터
+        const triggerCount = 2 + Math.floor(Math.random() * 2); // 2~3회 부스터
         const triggers = [];
         const basePoints = [0.18, 0.45, 0.7];
         for (let i = 0; i < triggerCount; i++) {
@@ -1032,6 +1057,7 @@
         }
 
         const injuryTrigger = Math.random() * 0.5 + 0.25; // 0.25~0.75
+        const bananaTrigger = 0.3 + Math.random() * 0.4;  // 0.3~0.7
 
         horses.push({
           el: horse,
@@ -1049,18 +1075,22 @@
           isInjured: false,
           injuryRemaining: 0,
           injuryUsed: false,
+          bananaTrigger,
+          bananaUsed: false,
+          isSlipping: false,
+          slipRemaining: 0,
           finalDramaTrigger: null,
           finalDramaType: null, // "boost" or "injury"
           finalDramaUsed: false
         });
       });
 
-      // 엔딩 드라마용 러너 하나 선택
+      // 엔딩 드라마용 러너 하나 선택 (막판 역전/부상)
       if (horses.length > 0) {
         const heroIndex = Math.floor(Math.random() * horses.length);
         const hero = horses[heroIndex];
         hero.finalDramaType = Math.random() < 0.5 ? "boost" : "injury";
-        hero.finalDramaTrigger = 0.82 + Math.random() * 0.08; // 0.82~0.9 구간에서 반드시 이벤트
+        hero.finalDramaTrigger = 0.82 + Math.random() * 0.08; // 0.82~0.9
       }
 
       previousOrder = horses.map((h) => h.name);
@@ -1074,9 +1104,7 @@
       confetti.className = "race-confetti";
       raceArea.appendChild(confetti);
 
-      setTimeout(() => {
-        confetti.remove();
-      }, 1200);
+      setTimeout(() => confetti.remove(), 1200);
     }
 
     function shuffleArray(arr) {
@@ -1157,8 +1185,32 @@
 
           const progress = h.x / finishX;
 
+          // 바나나 던지기: 옆/앞 선수에게 한 번
+          if (!h.bananaUsed && progress >= h.bananaTrigger && !h.isInjured && !h.isSlipping && !h.finalDramaUsed) {
+            h.bananaUsed = true;
+            const candidates = horses.filter((o) =>
+              o !== h &&
+              !o.finished &&
+              Math.abs(o.x - h.x) < 140 && // 옆/앞 정도 범위
+              o.x > h.x                      // 나보다 앞에 있는 선수에게
+            );
+            if (candidates.length > 0) {
+              const target = candidates[Math.floor(Math.random() * candidates.length)];
+              target.isSlipping = true;
+              target.slipRemaining = 600 + Math.random() * 700;
+              target.el.classList.add("slipping");
+              target.x = Math.max(0, target.x - (60 + Math.random() * 80)); // 뒤로 밀려남
+
+              // 슬립 중에는 다른 상태 제거
+              target.isBoosting = false;
+              target.el.classList.remove("boosting");
+              target.isInjured = false;
+              target.el.classList.remove("injured");
+            }
+          }
+
           // 일반 부상 이벤트 (중간 구간)
-          if (!h.injuryUsed && progress >= h.injuryTrigger && !h.isInjured) {
+          if (!h.injuryUsed && progress >= h.injuryTrigger && !h.isInjured && !h.isSlipping) {
             h.isInjured = true;
             h.injuryUsed = true;
             h.injuryRemaining = 700 + Math.random() * 700;
@@ -1167,26 +1219,34 @@
             h.el.classList.add("injured");
           }
 
-          // 엔딩 드라마 (부상 or 초강력 부스터)
-          if (!h.finalDramaUsed && h.finalDramaTrigger !== null && progress >= h.finalDramaTrigger) {
+          // 엔딩 드라마: 부상 or 초강력 부스터
+          if (!h.finalDramaUsed && h.finalDramaTrigger !== null && progress >= h.finalDramaTrigger && !h.isSlipping) {
             h.finalDramaUsed = true;
 
             if (h.finalDramaType === "injury") {
-              // 마지막에 선두·상위권이 부상으로 역전당하는 느낌
               h.isInjured = true;
               h.injuryRemaining = 1200 + Math.random() * 800;
               h.el.classList.add("injured");
               h.isBoosting = false;
               h.el.classList.remove("boosting");
             } else if (h.finalDramaType === "boost") {
-              // 뒤쪽에 있던 러너가 강력 부스터로 치고 올라오는 느낌
               h.isBoosting = true;
               h.boostRemaining = 1300 + Math.random() * 800;
               h.el.classList.add("boosting");
+              h.isInjured = false;
+              h.el.classList.remove("injured");
             }
           }
 
-          if (h.isInjured) {
+          // 상태별 속도 조정
+          if (h.isSlipping) {
+            speed *= -0.4; // 잠깐 뒤로 미끄러지는 느낌
+            h.slipRemaining -= delta;
+            if (h.slipRemaining <= 0) {
+              h.isSlipping = false;
+              h.el.classList.remove("slipping");
+            }
+          } else if (h.isInjured) {
             speed *= 0.08;
             h.injuryRemaining -= delta;
             if (h.injuryRemaining <= 0) {
@@ -1222,21 +1282,29 @@
             }
           }
 
+          // 전체 이동
           h.x += (speed * delta) / 1000 * 0.32;
 
+          // 결승선 도달 처리 (항상 거리 차이 있게 정렬)
           if (h.x >= finishX) {
             h.x = finishX;
             if (!h.finished) {
               h.finished = true;
               h.isBoosting = false;
               h.isInjured = false;
-              h.el.classList.remove("boosting");
-              h.el.classList.remove("injured");
+              h.isSlipping = false;
+              h.el.classList.remove("boosting", "injured", "slipping");
+
               finishedOrder.push(h);
 
               if (finishedOrder.length === 1) {
                 triggerRaceConfetti();
               }
+
+              // 등수별로 x 위치 살짝 다르게 (동시골인 방지)
+              const rankIndex = finishedOrder.length; // 1등, 2등, ...
+              const offset = (maxRankToCollect + 1 - rankIndex) * 10; // 1등이 가장 오른쪽
+              h.x = finishX + offset;
             }
           }
 
@@ -1277,9 +1345,7 @@
       raceRunning = false;
       cancelAnimationFrame(animationFrameId);
 
-      horses.forEach((h) => {
-        h.rowEl.classList.remove("winner-track");
-      });
+      horses.forEach((h) => h.rowEl.classList.remove("winner-track"));
       if (finishedOrder[0]) {
         finishedOrder[0].rowEl.classList.add("winner-track");
       }
