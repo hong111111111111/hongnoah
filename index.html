@@ -79,10 +79,9 @@
       align-items: center;
     }
 
-    #namesInput,
-    #imageInput {
+    #namesInput {
       width: 100%;
-      min-height: 90px;
+      min-height: 120px;
       background: rgba(15, 23, 42, 0.95);
       border-radius: 12px;
       border: 1px solid rgba(148, 163, 184, 0.35);
@@ -94,8 +93,7 @@
       transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
-    #namesInput:focus,
-    #imageInput:focus {
+    #namesInput:focus {
       border-color: #38bdf8;
       box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
       background: rgba(15, 23, 42, 0.98);
@@ -105,6 +103,40 @@
       font-size: 0.75rem;
       color: #6b7280;
       margin-top: 4px;
+    }
+
+    .file-input-wrapper {
+      margin-top: 10px;
+    }
+
+    .file-input-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    .file-input-box input[type="file"] {
+      font-size: 0.8rem;
+      border: none;
+      background: transparent;
+      color: #e5e7eb;
+    }
+
+    .file-input-box input[type="file"]::file-selector-button {
+      border: none;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(37, 99, 235, 0.9);
+      color: #f9fafb;
+      cursor: pointer;
+      margin-right: 6px;
+      font-size: 0.78rem;
     }
 
     .right-panel-inner {
@@ -611,17 +643,17 @@
         ></textarea>
         <div class="hint">※ 최소 2명 이상 입력해야 마라톤이 시작됩니다.</div>
 
-        <div style="height:10px;"></div>
-
-        <div class="field-label">
-          <span>러너 이미지 URL (선택)</span>
-          <span>이름 순서와 줄 맞추기</span>
+        <div class="file-input-wrapper">
+          <div class="field-label" style="margin-bottom:4px;">
+            <span>러너 이미지 (선택)</span>
+            <span>이름 순서대로 파일 선택</span>
+          </div>
+          <div class="file-input-box">
+            <span>📎 이미지 선택:</span>
+            <input id="imageFiles" type="file" accept="image/*" multiple />
+          </div>
+          <div class="hint">※ 첫 번째 선택한 이미지 → 첫 번째 이름, 두 번째 이미지 → 두 번째 이름 … 으로 매칭됩니다. (선택 안 하면 이모지+이름으로 표시)</div>
         </div>
-        <textarea
-          id="imageInput"
-          placeholder="예시)&#10;https://.../runner1.png&#10;https://.../runner2.png&#10;(비워두면 기본 이모지 + 이름으로 표시됩니다.)"
-        ></textarea>
-        <div class="hint">※ 각 줄이 위의 이름과 1:1로 매칭됩니다. (없으면 텍스트 러너로 표시)</div>
       </div>
 
       <div class="right-panel-inner">
@@ -629,7 +661,7 @@
           <h2>🎬 진행 방법</h2>
           <ul>
             <li>러너 이름을 한 줄에 하나씩 입력합니다.</li>
-            <li>필요하면 각 러너의 이미지 URL도 줄 맞춰 입력합니다.</li>
+            <li>원하면 이미지 파일을 여러 개 선택해 순서대로 매칭합니다.</li>
             <li><strong>레이스 시작</strong> 버튼을 누르면 러너들이 출발합니다.</li>
             <li>1등이 결승선을 통과하면 트랙 위에서 폭죽 이펙트가 터집니다.</li>
             <li>3등까지 들어오면 레이스가 종료되고 결과가 표시됩니다.</li>
@@ -711,7 +743,7 @@
 
   <script>
     const namesInput = document.getElementById("namesInput");
-    const imageInput = document.getElementById("imageInput");
+    const imageFilesInput = document.getElementById("imageFiles");
     const startBtn = document.getElementById("startBtn");
     const resetBtnSmall = document.getElementById("resetBtnSmall");
     const raceArea = document.getElementById("raceArea");
@@ -736,6 +768,7 @@
     let animationFrameId = null;
     let finishedOrder = [];
     let currentMode = "rank";
+    let imageObjectURLs = [];
 
     function getCurrentMode() {
       const checked = [...modeRadios].find((r) => r.checked);
@@ -763,12 +796,18 @@
       return parseLines(namesInput);
     }
 
-    function parseImages() {
-      return parseLines(imageInput);
-    }
-
     function parsePrizes() {
       return parseLines(prizeInput);
+    }
+
+    function getImageFileAt(index) {
+      if (!imageFilesInput || !imageFilesInput.files) return null;
+      return imageFilesInput.files[index] || null;
+    }
+
+    function clearImageObjectURLs() {
+      imageObjectURLs.forEach((url) => URL.revokeObjectURL(url));
+      imageObjectURLs = [];
     }
 
     function resetRaceVisualOnly() {
@@ -789,13 +828,14 @@
 
     function fullReset() {
       resetRaceVisualOnly();
+      clearImageObjectURLs();
       namesInput.value = "";
       if (prizeInput) prizeInput.value = "";
-      if (imageInput) imageInput.value = "";
+      if (imageFilesInput) imageFilesInput.value = "";
     }
 
     function setupTracks(names) {
-      const images = parseImages();
+      clearImageObjectURLs();
       tracksEl.innerHTML = "";
       horses = [];
       finishedOrder = [];
@@ -811,14 +851,21 @@
         const horse = document.createElement("div");
         horse.className = "horse";
 
-        const imgUrl = images[idx];
+        const file = getImageFileAt(idx);
 
-        if (imgUrl) {
+        if (file) {
           const img = document.createElement("img");
           img.className = "runner-img";
-          img.src = imgUrl;
+          const url = URL.createObjectURL(file);
+          imageObjectURLs.push(url);
+          img.src = url;
           img.alt = name;
           horse.appendChild(img);
+
+          const nameSpan = document.createElement("span");
+          nameSpan.className = "horse-name";
+          nameSpan.textContent = name;
+          horse.appendChild(nameSpan);
         } else {
           const emojiSpan = document.createElement("span");
           emojiSpan.className = "horse-emoji";
@@ -886,7 +933,7 @@
       startBtn.disabled = true;
       resetBtnSmall.disabled = true;
       if (prizeInput) prizeInput.disabled = currentMode === "match";
-      if (imageInput) imageInput.disabled = true;
+      if (imageFilesInput) imageFilesInput.disabled = true;
       modeRadios.forEach((r) => (r.disabled = true));
 
       raceRunning = true;
@@ -896,7 +943,7 @@
 
       let lastTime = null;
       const finishX = raceArea.clientWidth - 210;
-      const maxRankToCollect = Math.min(3, names.length); // 👉 3등까지 수집 후 종료
+      const maxRankToCollect = Math.min(3, names.length);
 
       function step(timestamp) {
         if (!raceRunning) return;
@@ -914,4 +961,135 @@
 
           if (h.burstCooldown <= 0) {
             speed *= 2 + Math.random() * 1.2;
-            if (Math.rando
+            if (Math.random() < 0.06) {
+              h.burstCooldown = 1000 + Math.random() * 2500;
+            }
+          }
+
+          // 속도 1/2
+          h.x += (speed * delta) / 1000 * 0.5;
+
+          if (h.x >= finishX) {
+            h.x = finishX;
+            if (!h.finished) {
+              h.finished = true;
+              finishedOrder.push(h);
+
+              if (finishedOrder.length === 1) {
+                triggerRaceConfetti();
+              }
+            }
+          }
+
+          h.el.style.transform = `translate(${h.x}px, -50%)`;
+        });
+
+        if (finishedOrder.length >= maxRankToCollect) {
+          endRace();
+          return;
+        }
+
+        animationFrameId = requestAnimationFrame(step);
+      }
+
+      animationFrameId = requestAnimationFrame(step);
+    }
+
+    function endRace() {
+      raceRunning = false;
+      cancelAnimationFrame(animationFrameId);
+
+      horses.forEach((h) => {
+        h.rowEl.classList.remove("winner-track");
+      });
+      if (finishedOrder[0]) {
+        finishedOrder[0].rowEl.classList.add("winner-track");
+      }
+
+      if (finishedOrder[0]) {
+        raceStatusLight.style.background = "#22c55e";
+        raceStatusLight.style.boxShadow = "0 0 12px #22c55e";
+        raceStatusText.textContent = `1등: ${finishedOrder[0].name}`;
+      }
+
+      const maxToShow = Math.min(3, finishedOrder.length);
+      const prizes = currentMode === "match" ? parsePrizes() : [];
+
+      winnerTitleEl.textContent =
+        currentMode === "match" ? "순위 & 결승선 매칭" : "최종 순위";
+      winnerNameEl.textContent = finishedOrder[0]
+        ? `1등: ${finishedOrder[0].name}`
+        : "결과 없음";
+
+      winnerSubEl.textContent =
+        currentMode === "match"
+          ? "결승선 항목이 순위대로 1:1 매칭되었습니다."
+          : "1~3등까지 결과입니다.";
+
+      rankListEl.innerHTML = "";
+      const rankLabels = ["1등", "2등", "3등"];
+
+      for (let i = 0; i < maxToShow; i++) {
+        const h = finishedOrder[i];
+        const row = document.createElement("div");
+        row.className = "rank-row";
+
+        const left = document.createElement("div");
+        left.className = "rank-left";
+
+        const badge = document.createElement("div");
+        badge.className = "rank-badge";
+        badge.textContent = rankLabels[i];
+
+        const nameSpan = document.createElement("div");
+        nameSpan.className = "rank-name";
+        nameSpan.textContent = h.name;
+
+        left.appendChild(badge);
+        left.appendChild(nameSpan);
+        row.appendChild(left);
+
+        const prizeSpan = document.createElement("div");
+        prizeSpan.className = "rank-prize";
+        if (currentMode === "match") {
+          const prizeText = prizes[i] || "항목 없음";
+          prizeSpan.textContent = `결승선: ${prizeText}`;
+        } else {
+          prizeSpan.textContent = "";
+        }
+        row.appendChild(prizeSpan);
+
+        rankListEl.appendChild(row);
+      }
+
+      winnerOverlay.classList.remove("hidden");
+
+      namesInput.disabled = false;
+      startBtn.disabled = false;
+      resetBtnSmall.disabled = false;
+      if (prizeInput) prizeInput.disabled = false;
+      if (imageFilesInput) imageFilesInput.disabled = false;
+      modeRadios.forEach((r) => (r.disabled = false));
+    }
+
+    startBtn.addEventListener("click", startRace);
+    resetBtnSmall.addEventListener("click", fullReset);
+
+    closeWinnerBtn.addEventListener("click", () => {
+      winnerOverlay.classList.add("hidden");
+    });
+
+    replayBtn.addEventListener("click", () => {
+      winnerOverlay.classList.add("hidden");
+      startRace();
+    });
+
+    namesInput.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        if (!startBtn.disabled) startBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
