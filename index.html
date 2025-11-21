@@ -22,7 +22,7 @@ body {
 }
 .container {
   width: 100%;
-  max-width: 1200px; /* 폭을 조금 더 넓힘 */
+  max-width: 1200px;
   background: rgba(15, 23, 42, 0.92);
   border-radius: 20px;
   padding: 24px 24px 28px;
@@ -31,11 +31,10 @@ body {
 }
 .title {
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 .title h1 {
-  font-size: 1.6rem;
-  letter-spacing: 0.04em;
+  font-size: 1.8rem;
   font-weight: 800;
   margin-bottom: 6px;
   line-height: 1.3;
@@ -46,155 +45,135 @@ body {
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
-/* 그룹 입력 패널 스타일 변경 */
-.group-container {
+
+/* 고정 러너 설정 영역 */
+.fixed-runners {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4개 그룹 나란히 */
-  gap: 12px;
-  margin-bottom: 18px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
 }
-@media (max-width: 900px) {
-  .group-container {
-    grid-template-columns: 1fr 1fr; /* 모바일엔 2줄 */
-  }
+@media (max-width: 800px) {
+  .fixed-runners { grid-template-columns: 1fr 1fr; }
 }
-@media (max-width: 600px) {
-  .group-container {
-    grid-template-columns: 1fr; /* 더 작으면 1줄 */
-  }
-}
-.group-box {
+.runner-card {
   background: rgba(30, 41, 59, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
-.group-title {
-  font-size: 0.95rem;
+.runner-name-badge {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #38bdf8;
-  margin-bottom: 8px;
-  text-align: center;
+  color: #fff;
+  background: #0ea5e9;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
 }
-.group-box textarea {
+/* 사역캠퍼스 강조 */
+.runner-card.special .runner-name-badge {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+.file-label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+.file-input {
   width: 100%;
-  height: 80px;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  border-radius: 8px;
-  padding: 8px;
-  color: #e5e7eb;
-  font-size: 0.85rem;
-  resize: none;
-  margin-bottom: 8px;
-}
-.group-box textarea:focus {
-  border-color: #38bdf8;
-  outline: none;
-}
-.group-file-btn {
-    font-size: 0.75rem;
-    color: #cbd5e1;
-    overflow: hidden;
-}
-.group-file-btn input[type="file"] {
-    width: 100%;
-    font-size: 0.75rem;
-}
-
-.control-panel {
-  margin-bottom: 10px;
-}
-.hint {
   font-size: 0.75rem;
-  color: #6b7280;
-  margin-top: 4px;
-  text-align: center;
-  margin-bottom: 10px;
+  color: #cbd5e1;
+}
+.special-note {
+  font-size: 0.75rem;
+  color: #fbbf24;
+  margin-top: 8px;
+  font-weight: 600;
 }
 
-/* 우측 옵션 패널 등 (하단 배치로 변경 고려했으나 기존 유지) */
-.options-panel {
-    background: linear-gradient(135deg, rgba(8, 47, 73, 0.8), rgba(15, 23, 42, 0.97));
-    border: 1px solid rgba(56, 189, 248, 0.35);
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 16px;
+/* 옵션 및 버튼 */
+.control-area {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 .mode-options {
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  justify-content: center;
+  gap: 12px;
 }
 .mode-pill {
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  padding: 4px 12px;
-  font-size: 0.85rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 6px 16px;
+  font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(15, 23, 42, 0.6);
   cursor: pointer;
 }
-
+#prizeWrapper {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
 #prizeInput {
   width: 100%;
-  min-height: 60px;
-  background: rgba(15, 23, 42, 0.95);
-  border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  padding: 8px 10px;
-  color: #e5e7eb;
-  font-size: 0.82rem;
+  height: 60px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 8px;
+  padding: 8px;
+  color: #fff;
   resize: vertical;
-  outline: none;
 }
 
 .btn-row {
   display: flex;
-  gap: 12px;
-  margin-top: 12px;
-  justify-content: center;
+  gap: 16px;
 }
 button {
   border: none;
   cursor: pointer;
   border-radius: 999px;
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 700;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  font-weight: 800;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: transform 0.1s;
+  transition: all 0.2s;
 }
 #startBtn {
   background: linear-gradient(135deg, #f97316, #ec4899);
-  color: #f9fafb;
-  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.45);
-  min-width: 200px;
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.5);
 }
-#startBtn:hover { transform: scale(1.03); }
-#startBtn:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
-
-#resetBtnSmall {
-  background: rgba(30, 41, 59, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  color: #e5e7eb;
+#startBtn:hover { transform: scale(1.05); }
+#startBtn:disabled { filter: grayscale(1); cursor: not-allowed; transform: none; }
+#resetBtn {
+  background: #334155;
+  color: #e2e8f0;
 }
 
 /* 레이스 영역 */
 .race-wrapper {
-  margin-top: 16px;
+  margin-top: 10px;
   background: rgba(15, 23, 42, 0.96);
   border-radius: 16px;
   padding: 14px;
-  border: 1px solid rgba(31, 41, 55, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.2);
   position: relative;
 }
 .race-header {
@@ -204,128 +183,95 @@ button {
   font-size: 0.9rem;
   color: #9ca3af;
 }
-.race-light {
-  display: inline-block;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: #22c55e;
-  margin-right: 6px;
-  box-shadow: 0 0 8px #22c55e;
-}
-
 .race-area {
   position: relative;
   margin-top: 6px;
-  padding: 20px 20px 20px 80px; /* 왼쪽 여백 확보 */
+  padding: 20px 0; /* 상하 여백 */
   border-radius: 18px;
-  background: linear-gradient(#064e3b, #065f46);
-  border: 2px solid rgba(15, 23, 42, 0.9);
+  background: linear-gradient(#064e3b, #065f46); /* 잔디색 */
+  border: 4px solid #0f172a;
   overflow: hidden;
-  min-height: 400px; /* 높이 증가 */
+  height: 480px; /* 트랙 높이 충분히 확보 */
 }
 /* 트랙 라인 */
 .race-area::before {
   content: "";
   position: absolute;
-  inset: 10px 100px; /* 결승선 위치 고려 */
-  background: repeating-linear-gradient(to bottom, transparent, transparent 98px, rgba(255,255,255,0.1) 98px, rgba(255,255,255,0.1) 100px);
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, transparent, transparent 118px, rgba(255,255,255,0.1) 118px, rgba(255,255,255,0.1) 120px);
   pointer-events: none;
 }
 
 .finish-line {
   position: absolute;
-  top: 10px; bottom: 10px;
-  right: 140px;
-  width: 20px;
+  top: 0; bottom: 0;
+  right: 120px;
+  width: 24px;
   background-image: linear-gradient(45deg, #fff 25%, #000 25%, #000 50%, #fff 50%, #fff 75%, #000 75%, #000);
-  background-size: 20px 20px;
+  background-size: 24px 24px;
   z-index: 1;
 }
 .finish-label {
   position: absolute;
-  top: 10px; right: 40px;
+  top: 10px; right: 20px;
   color: #fbbf24;
-  font-weight: 800;
-  font-size: 1.2rem;
+  font-weight: 900;
+  font-size: 1.5rem;
+  transform: rotate(90deg);
+  transform-origin: right top;
 }
 
-.tracks { position: relative; z-index: 2; }
-.track-row {
+.tracks {
   position: relative;
-  height: 100px; /* 사진 크기에 맞춰 높이 증가 */
+  width: 100%;
+  height: 100%;
   display: flex;
-  align-items: center;
-  margin-bottom: 4px;
-}
-.lane-label {
-  position: absolute;
-  left: -60px;
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: #0f172a;
-  border: 1px solid #94a3b8;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff;
-  font-size: 0.8rem;
+  flex-direction: column;
+  justify-content: space-evenly; /* 균등 배분 */
 }
 
-/* 말(러너) 스타일 수정: 사진 크게 */
+/* 말(러너) 스타일 */
 .horse {
   position: absolute;
-  left: 0; top: 50%;
-  transform: translate(0, -50%);
-  display: flex; align-items: center;
-  gap: 8px;
+  left: 20px; /* 출발선 */
+  display: flex;
+  align-items: center;
+  gap: 10px;
   z-index: 10;
-  transition: transform 0.1s linear; /* 부드러운 이동 */
+  transition: transform 0.05s linear; /* 부드러운 이동 */
+  will-change: transform;
 }
 .runner-img {
-  width: 80px;  /* 크기 대폭 확대 */
+  width: 80px;  /* 사진 크기 80px 유지 */
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #f8fafc;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  border: 4px solid #f8fafc;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.7);
   background: #1e293b;
 }
 .horse-emoji {
-  font-size: 3.5rem; /* 이모지도 크게 */
+  font-size: 4rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
 }
-/* 달릴 때 이름 숨김 */
-.horse-name { display: none; }
 
-/* 효과들 */
-.horse.boosting .runner-img {
-  border-color: #fbbf24;
-  box-shadow: 0 0 20px #fbbf24;
-}
+/* 상태 이펙트 */
+.horse.boosting .runner-img { border-color: #facc15; box-shadow: 0 0 25px #facc15; }
 .horse.boosting::before {
-  content: "🔥";
-  position: absolute;
-  left: -30px; top: 50%; transform: translateY(-50%);
-  font-size: 2rem;
-  animation: boostAni 0.2s infinite;
+  content: "🔥"; position: absolute; left: -40px; top: 50%; transform: translateY(-50%); font-size: 2.5rem;
+  animation: bounce 0.3s infinite alternate;
 }
-@keyframes boostAni {
-  0% { transform: translateY(-50%) scale(1); }
-  50% { transform: translateY(-50%) scale(1.2); }
-  100% { transform: translateY(-50%) scale(1); }
+.horse.injured { filter: grayscale(1); opacity: 0.7; }
+.horse.injured::after {
+  content: "🩹"; position: absolute; top: -30px; left: 20px; font-size: 2rem;
 }
-
 .horse.slipping { opacity: 0.8; }
 .horse.slipping::after {
-  content: "🍌";
-  position: absolute; top: -30px; left: 20px;
-  font-size: 2rem;
-  animation: spin 0.5s infinite;
+  content: "🍌"; position: absolute; top: -30px; left: 20px; font-size: 2rem; animation: spin 0.5s infinite;
 }
-
-.horse.injured { filter: grayscale(0.8); }
-.horse.injured::after {
-  content: "🩹";
-  position: absolute; top: -30px; left: 20px;
-  font-size: 2rem;
-}
+@keyframes bounce { to { transform: translateY(-55%); } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 /* 결과창 */
 .winner-overlay {
@@ -333,7 +279,7 @@ button {
   background: rgba(0,0,0,0.85);
   display: flex; align-items: center; justify-content: center;
   z-index: 100;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
 }
 .hidden { display: none !important; }
 
@@ -343,59 +289,26 @@ button {
   border-radius: 20px;
   padding: 30px;
   text-align: center;
-  max-width: 600px;
+  max-width: 500px;
   width: 90%;
-  box-shadow: 0 0 50px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 60px rgba(249, 115, 22, 0.4);
 }
 .winner-photo img {
-  width: 120px; height: 120px;
+  width: 140px; height: 140px;
   border-radius: 50%;
-  border: 4px solid #fbbf24;
+  border: 5px solid #fbbf24;
   margin: 10px 0;
-}
-.winner-name {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #fff;
-  margin: 10px 0;
-}
-.winner-group {
-  font-size: 1rem;
-  color: #38bdf8;
-  margin-bottom: 10px;
-}
-
-.rank-list {
-  text-align: left;
-  background: #0f172a;
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-.rank-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px;
-  border-bottom: 1px solid #334155;
-}
-.rank-row:last-child { border-bottom: none; }
-.rank-info { display: flex; align-items: center; gap: 10px; }
-.rank-img-small {
-  width: 50px; height: 50px; /* 결과 리스트 사진도 확대 */
-  border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #cbd5e1;
 }
-.rank-text { display: flex; flex-direction: column; }
-.rank-badge { font-weight: bold; color: #fbbf24; font-size: 0.9rem; }
-.rank-n { font-size: 1rem; font-weight: 600; }
-.rank-g { font-size: 0.8rem; color: #94a3b8; }
-.rank-prize { color: #fcd34d; font-size: 0.9rem; text-align: right; max-width: 40%; word-break: keep-all;}
+.winner-name { font-size: 2rem; font-weight: bold; color: #fff; margin: 10px 0; }
+.rank-list { text-align: left; background: #0f172a; padding: 12px; border-radius: 12px; margin-top: 16px; }
+.rank-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #334155; }
+.rank-row:last-child { border-bottom: none; }
+.rank-left { display: flex; align-items: center; gap: 10px; }
+.rank-badge { color: #fbbf24; font-weight: bold; width: 40px; }
+.rank-txt { font-weight: 600; color: #e2e8f0; }
+.rank-prize { font-size: 0.9rem; color: #fcd34d; text-align: right; width: 50%; }
 
-.winner-buttons { margin-top: 20px; display: flex; justify-content: center; gap: 10px; }
-#closeWinnerBtn { background: #22c55e; }
-#replayBtn { background: #475569; }
 </style>
 </head>
 <body>
@@ -404,67 +317,56 @@ button {
 
 <div class="container">
   <div class="title">
-    <div class="accent">Random Draw</div>
-    <h1>온누리 대학청년 전임교역자<br />리트릿 마라톤 🏃</h1>
+    <div class="accent">Retreat Event</div>
+    <h1>전임교역자 리트릿 마라톤 🏃</h1>
   </div>
 
-  <div class="group-container">
-    <div class="group-box">
-      <div class="group-title">예배기획</div>
-      <textarea id="namesGroup1" placeholder="이름 (줄바꿈 구분)"></textarea>
-      <div class="group-file-btn">
-        사진: <input type="file" id="filesGroup1" accept="image/*" multiple>
-      </div>
+  <div class="fixed-runners">
+    <div class="runner-card">
+      <div class="runner-name-badge">1. 예배기획</div>
+      <label class="file-label">📸 사진 선택:</label>
+      <input type="file" id="file0" class="file-input" accept="image/*">
     </div>
-    <div class="group-box">
-      <div class="group-title">선교</div>
-      <textarea id="namesGroup2" placeholder="이름 (줄바꿈 구분)"></textarea>
-      <div class="group-file-btn">
-        사진: <input type="file" id="filesGroup2" accept="image/*" multiple>
-      </div>
+    <div class="runner-card">
+      <div class="runner-name-badge">2. 선교</div>
+      <label class="file-label">📸 사진 선택:</label>
+      <input type="file" id="file1" class="file-input" accept="image/*">
     </div>
-    <div class="group-box">
-      <div class="group-title">양육</div>
-      <textarea id="namesGroup3" placeholder="이름 (줄바꿈 구분)"></textarea>
-      <div class="group-file-btn">
-        사진: <input type="file" id="filesGroup3" accept="image/*" multiple>
-      </div>
+    <div class="runner-card">
+      <div class="runner-name-badge">3. 양육</div>
+      <label class="file-label">📸 사진 선택:</label>
+      <input type="file" id="file2" class="file-input" accept="image/*">
     </div>
-    <div class="group-box">
-      <div class="group-title">사역캠퍼스</div>
-      <textarea id="namesGroup4" placeholder="이름 (줄바꿈 구분)"></textarea>
-      <div class="group-file-btn">
-        사진: <input type="file" id="filesGroup4" accept="image/*" multiple>
-      </div>
-      <div style="font-size:0.7rem; color:#fbbf24; margin-top:4px;">※ 도착 시 항목 2개 매칭!</div>
+    <div class="runner-card special">
+      <div class="runner-name-badge">4. 사역캠퍼스</div>
+      <label class="file-label">📸 사진 선택:</label>
+      <input type="file" id="file3" class="file-input" accept="image/*">
+      <div class="special-note">🎁 도착 시 항목 2개 획득!</div>
     </div>
   </div>
 
-  <div class="options-panel">
+  <div class="control-area">
     <div class="mode-options">
       <label class="mode-pill">
         <input type="radio" name="mode" value="rank" checked /> 순위만 보기
       </label>
       <label class="mode-pill">
-        <input type="radio" name="mode" value="match" /> 결승선 항목 랜덤 매칭
+        <input type="radio" name="mode" value="match" /> 상품/벌칙 매칭
       </label>
     </div>
-    
     <div id="prizeWrapper" class="hidden">
-      <div class="hint">결승선 항목(상품/벌칙)을 입력하세요 (5개 이상 권장)</div>
-      <textarea id="prizeInput" placeholder="예시)&#10;스타벅스상품권&#10;설거지&#10;안마해주기&#10;영화예매권&#10;칭찬하기"></textarea>
+      <textarea id="prizeInput" placeholder="결승선 항목 입력 (예: 설거지, 커피쏘기, 칭찬하기 - 줄바꿈으로 구분)"></textarea>
     </div>
-  </div>
-
-  <div class="btn-row">
-    <button id="startBtn">레이스 시작! 🏁</button>
-    <button id="resetBtnSmall">초기화</button>
+    <div class="btn-row">
+      <button id="startBtn">레이스 시작! 🏁</button>
+      <button id="resetBtn">초기화</button>
+    </div>
   </div>
 
   <div class="race-wrapper">
     <div class="race-header">
-      <div><span class="race-light" id="raceStatusLight"></span> <span id="raceStatusText">대기 중...</span></div>
-      <div>결승선 통과 순서대로 1~4등 결정</div>
+      <span id="raceStatus">대기 중...</span>
+      <span>결승선 통과 순서대로 결정</span>
     </div>
     <div class="race-area" id="raceArea">
       <div class="finish-line"></div>
@@ -476,46 +378,28 @@ button {
 
 <div class="winner-overlay hidden" id="winnerOverlay">
   <div class="winner-card">
-    <div class="winner-icon">🏆</div>
+    <div>🏆 Result</div>
     <div id="winnerPhoto" class="winner-photo"></div>
-    <div class="winner-group" id="winnerGroup"></div>
-    <div class="winner-name" id="winnerName">1등 이름</div>
-    <div class="winner-sub" id="winnerSub"></div>
+    <div class="winner-name" id="winnerName"></div>
     <div id="rankList" class="rank-list"></div>
-    <div class="winner-buttons">
-      <button id="closeWinnerBtn">닫기</button>
-      <button id="replayBtn">다시 하기</button>
+    <div style="margin-top:20px; display:flex; justify-content:center; gap:10px;">
+      <button id="closeBtn" style="padding:10px 20px; font-size:0.9rem; background:#475569;">닫기</button>
+      <button id="replayBtn" style="padding:10px 20px; font-size:0.9rem; background:#0ea5e9;">다시 하기</button>
     </div>
   </div>
 </div>
 
 <script>
-// --- 전역 변수 ---
+// --- 전역 설정 ---
+const FIXED_NAMES = ["예배기획", "선교", "양육", "사역캠퍼스"];
 let horses = [];
 let raceRunning = false;
 let animationFrameId = null;
 let finishedOrder = [];
-let imageBlobUrls = []; // 생성된 blob URL 관리 (메모리 해제용)
-let youtubePlayer = null; // 유튜브 플레이어 객체
+let imgBlobs = [];
+let youtubePlayer = null;
 
-// --- 그룹 정의 ---
-const GROUPS = [
-  { id: 'Group1', name: '예배기획', elName: 'namesGroup1', elFile: 'filesGroup1' },
-  { id: 'Group2', name: '선교',     elName: 'namesGroup2', elFile: 'filesGroup2' },
-  { id: 'Group3', name: '양육',     elName: 'namesGroup3', elFile: 'filesGroup3' },
-  { id: 'Group4', name: '사역캠퍼스', elName: 'namesGroup4', elFile: 'filesGroup4' }
-];
-
-// --- DOM 요소 ---
-const startBtn = document.getElementById("startBtn");
-const resetBtn = document.getElementById("resetBtnSmall");
-const tracksEl = document.getElementById("tracks");
-const modeRadios = document.querySelectorAll('input[name="mode"]');
-const prizeWrapper = document.getElementById("prizeWrapper");
-const prizeInput = document.getElementById("prizeInput");
-const winnerOverlay = document.getElementById("winnerOverlay");
-
-// --- 유튜브 API 로드 ---
+// --- 유튜브 BGM 설정 ---
 const tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 const firstScriptTag = document.getElementsByTagName('script')[0];
@@ -523,414 +407,346 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 function onYouTubeIframeAPIReady() {
   youtubePlayer = new YT.Player('player', {
-    height: '0',
-    width: '0',
-    videoId: 'ZzHYbM0l4ec', // 불의 전차 OST
-    events: {
-      'onReady': onPlayerReady
-    }
+    height: '0', width: '0',
+    videoId: 'ZzHYbM0l4ec', // 불의 전차
   });
 }
-function onPlayerReady(event) {
-  // 준비 완료
-}
-function playMusic() {
-  if(youtubePlayer && youtubePlayer.playVideo) {
-    youtubePlayer.seekTo(0);
-    youtubePlayer.playVideo();
-  }
-}
-function stopMusic() {
-  if(youtubePlayer && youtubePlayer.stopVideo) {
-    youtubePlayer.stopVideo();
-  }
-}
+function playMusic() { if(youtubePlayer?.playVideo) { youtubePlayer.seekTo(0); youtubePlayer.playVideo(); } }
+function stopMusic() { if(youtubePlayer?.stopVideo) youtubePlayer.stopVideo(); }
 
-// --- 모드 변경 핸들러 ---
-modeRadios.forEach(r => {
-  r.addEventListener('change', () => {
-    prizeWrapper.classList.toggle('hidden', r.value !== 'match');
-  });
-});
+// --- DOM ---
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
+const tracksEl = document.getElementById("tracks");
+const winnerOverlay = document.getElementById("winnerOverlay");
+const prizeWrapper = document.getElementById("prizeWrapper");
+const prizeInput = document.getElementById("prizeInput");
+const modeRadios = document.querySelectorAll('input[name="mode"]');
 
-// --- 헬퍼 함수 ---
-function parseLines(val) {
-  return val.trim().split('\n').map(s=>s.trim()).filter(s=>s.length>0);
-}
+// 모드 토글
+modeRadios.forEach(r => r.addEventListener('change', () => {
+  prizeWrapper.classList.toggle('hidden', r.value !== 'match');
+}));
 
-// 4개 그룹에서 데이터 수집하여 'horses' 배열 생성
-function setupHorses() {
-  // 기존 이미지 URL 해제
-  imageBlobUrls.forEach(url => URL.revokeObjectURL(url));
-  imageBlobUrls = [];
+// 줄바꿈 파싱
+function parseLines(v) { return v.trim().split('\n').map(s=>s.trim()).filter(s=>s.length>0); }
+
+// --- 초기화 및 말 세팅 ---
+function setupRace() {
+  // 기존 데이터 정리
+  imgBlobs.forEach(url => URL.revokeObjectURL(url));
+  imgBlobs = [];
   horses = [];
+  finishedOrder = [];
   tracksEl.innerHTML = "";
+  
+  // 4개 고정 러너 생성
+  FIXED_NAMES.forEach((name, idx) => {
+    // 파일 확인
+    const fileInput = document.getElementById(`file${idx}`);
+    let imgUrl = null;
+    if(fileInput.files && fileInput.files[0]) {
+      imgUrl = URL.createObjectURL(fileInput.files[0]);
+      imgBlobs.push(imgUrl);
+    }
 
-  let totalIndex = 0;
-
-  GROUPS.forEach(groupInfo => {
-    const nameEl = document.getElementById(groupInfo.elName);
-    const fileEl = document.getElementById(groupInfo.elFile);
+    // DOM 생성
+    const horseEl = document.createElement("div");
+    horseEl.className = "horse";
+    // 트랙 내 수직 위치: Flex로 분배하되, CSS top은 사용 안함 (Flex justify-content: space-evenly)
+    // 하지만 애니메이션을 위해 relative 컨테이너 안에 absolute로 배치하거나, 
+    // 여기서는 간단히 트랙 컨테이너가 flex-col 이므로, 
+    // 각 말은 별도의 div(row) 없이 absolute top %로 배치하는게 애니메이션 제어가 쉬움.
     
-    const names = parseLines(nameEl.value);
-    const files = fileEl.files;
+    // 수정: 트랙 영역 내 자유 배치 (y축)
+    const topPos = 15 + (idx * 22); // 15%, 37%, 59%, 81% 대략 배치
+    horseEl.style.top = topPos + "%"; 
 
-    names.forEach((name, idx) => {
-      let imgUrl = null;
-      if(files && files[idx]) {
-        imgUrl = URL.createObjectURL(files[idx]);
-        imageBlobUrls.push(imgUrl);
-      }
+    if(imgUrl) {
+      const img = document.createElement("img");
+      img.src = imgUrl;
+      img.className = "runner-img";
+      horseEl.appendChild(img);
+    } else {
+      const emoji = document.createElement("div");
+      emoji.className = "horse-emoji";
+      emoji.textContent = "🏃";
+      horseEl.appendChild(emoji);
+    }
 
-      // DOM 생성
-      const row = document.createElement("div");
-      row.className = "track-row";
-      
-      const laneLabel = document.createElement("div");
-      laneLabel.className = "lane-label";
-      laneLabel.textContent = totalIndex + 1;
-      
-      const horseEl = document.createElement("div");
-      horseEl.className = "horse";
-      
-      if(imgUrl) {
-        const img = document.createElement("img");
-        img.className = "runner-img";
-        img.src = imgUrl;
-        horseEl.appendChild(img);
-      } else {
-        const emoji = document.createElement("div");
-        emoji.className = "horse-emoji";
-        emoji.textContent = "🏃"; // 이미지 없으면 기본 이모지
-        horseEl.appendChild(emoji);
-      }
-      
-      // 이름은 DOM에 붙여두되 CSS로 숨김
-      const nameSpan = document.createElement("span");
-      nameSpan.className = "horse-name";
-      nameSpan.textContent = name;
-      horseEl.appendChild(nameSpan);
+    tracksEl.appendChild(horseEl);
 
-      row.appendChild(laneLabel);
-      row.appendChild(horseEl);
-      tracksEl.appendChild(row);
+    // 러너 객체
+    horses.push({
+      id: idx,
+      name: name,
+      el: horseEl,
+      imgUrl: imgUrl,
+      x: 0,
+      finished: false,
+      // 속도 관련 설정 (매우 느리게 조정됨)
+      baseSpeed: 15 + Math.random() * 5, // 기존 60에서 대폭 하향 -> 약 15~20픽셀/sec 느낌으로 시작해서 배수로 뜀
+      
+      // 이벤트 트리거들
+      nextBoost: 0.2 + Math.random() * 0.6, // 20~80% 구간 어딘가
+      boostDuration: 0,
+      isBoosting: false,
+      
+      nextInjury: 0.3 + Math.random() * 0.4,
+      injuryDuration: 0,
+      isInjured: false,
 
-      // 레이스 로직용 객체 생성 (기존 로직 유지하되 파라미터 조정)
-      // 부스터 트리거 등 랜덤 설정
-      const triggerCount = 2 + Math.floor(Math.random() * 2);
-      const triggers = [];
-      for(let i=0; i<triggerCount; i++) triggers.push(Math.random()*0.8 + 0.1);
+      nextBanana: 0.4 + Math.random() * 0.4,
+      bananaUsed: false,
       
-      horses.push({
-        el: horseEl,
-        rowEl: row,
-        name: name,
-        groupName: groupInfo.name, // 그룹명 저장
-        imgUrl: imgUrl,
-        x: 0,
-        baseSpeed: 60 + Math.random() * 30, // 속도 변수
-        finished: false,
-        boostTriggers: triggers.sort((a,b)=>a-b),
-        isBoosting: false,
-        boostTime: 0,
-        injuryTrigger: 0.3 + Math.random() * 0.4,
-        isInjured: false,
-        injuryTime: 0,
-        injuryUsed: false,
-        bananaTrigger: 0.2 + Math.random() * 0.5,
-        bananaUsed: false,
-        isSlipping: false,
-        slipTime: 0,
-        // 막판 뒤집기
-        finalDrama: Math.random() > 0.5 ? 'boost' : 'injury',
-        finalDramaTrigger: 0.85 + Math.random() * 0.05,
-        finalDramaUsed: false
-      });
-      
-      totalIndex++;
+      isSlipping: false,
+      slipDuration: 0,
+
+      // 막판 스퍼트
+      finalDrama: 0.85 + Math.random() * 0.05, 
+      finalAction: Math.random() > 0.5 ? 'boost' : 'injury', 
+      dramaUsed: false
     });
   });
 }
 
-// --- 레이스 로직 ---
-function startRace() {
-  setupHorses();
-  if (horses.length < 2) {
-    alert("최소 2명 이상의 러너가 필요합니다.");
-    return;
-  }
-  const mode = document.querySelector('input[name="mode"]:checked').value;
-  if(mode === 'match') {
-    const p = parseLines(prizeInput.value);
-    if(p.length < 1) {
-      alert("결승선 항목을 입력해주세요.");
-      return;
-    }
-  }
-
-  // UI 잠금
-  startBtn.disabled = true;
-  resetBtn.disabled = true;
-  GROUPS.forEach(g => {
-    document.getElementById(g.elName).disabled = true;
-    document.getElementById(g.elFile).disabled = true;
-  });
-  winnerOverlay.classList.add("hidden");
-  
-  playMusic(); // 음악 재생
-
-  raceRunning = true;
-  finishedOrder = [];
-  lastTime = null;
-  
-  document.getElementById("raceStatusLight").style.background = "#facc15";
-  document.getElementById("raceStatusText").textContent = "레이스 진행 중! 🏃‍♂️🏃‍♀️";
-
-  requestAnimationFrame(loop);
-}
-
-let lastTime = null;
-const finishX = document.getElementById("raceArea").clientWidth - 180; // 여백 고려
+// --- 루프 ---
+let lastTime = 0;
+// 트랙 길이 계산 (피니쉬 라인 위치 고려)
+function getFinishX() { return document.getElementById("raceArea").clientWidth - 160; }
 
 function loop(timestamp) {
   if(!raceRunning) return;
   if(!lastTime) lastTime = timestamp;
-  const delta = timestamp - lastTime;
+  const dt = timestamp - lastTime;
   lastTime = timestamp;
 
-  // 현재 선두와 꼴찌 거리 계산 (고무줄 효과용)
+  const finishX = getFinishX();
+  
+  // 전체 러너 중 선두/후미 거리 파악 (고무줄)
   const xs = horses.map(h => h.x);
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const dist = maxX - minX || 1;
+  const leaderX = Math.max(...xs);
+  const lastX = Math.min(...xs);
+  const dist = leaderX - lastX || 1;
+
+  let allFinished = true;
 
   horses.forEach(h => {
     if(h.finished) return;
+    allFinished = false;
 
-    let speed = h.baseSpeed * (0.9 + Math.random()*0.2); // 기본 변동
-    
-    // 고무줄 효과 (뒤처지면 빨라짐)
-    const relPos = (h.x - minX) / dist; // 0(뒤) ~ 1(앞)
-    speed *= (1.4 - relPos * 0.6); 
-
+    // 진행률 (0~1)
     const progress = h.x / finishX;
+    
+    // 기본 속도 계산 (속도 계수 대폭 하향: * 0.6 -> * 0.08 수준으로 낮춰야 10초 이상 걸림)
+    // 원래 로직: (speed * delta) / 1000 * multiplier
+    // 목표: 10초 = 10000ms. 
+    // 1000px 가려면 100px/s = 0.1px/ms.
+    // baseSpeed가 20이면, multiplier가 0.005 정도여야 함.
+    
+    let currentSpeed = h.baseSpeed; // 약 15~20
 
-    // 상태 관리: 미끄러짐(바나나)
+    // 고무줄: 뒤처지면 빨라짐
+    const rankFactor = (leaderX - h.x) / dist; // 0(선두) ~ 1(꼴찌)
+    currentSpeed += (rankFactor * 10); // 꼴찌는 속도 +10
+
+    // 상태 처리
     if(h.isSlipping) {
-      speed = -20; // 뒤로 밀림
-      h.slipTime -= delta;
-      if(h.slipTime <= 0) {
-        h.isSlipping = false;
-        h.el.classList.remove("slipping");
-      }
+      currentSpeed = -15; // 뒤로 후퇴
+      h.slipDuration -= dt;
+      if(h.slipDuration <= 0) { h.isSlipping = false; h.el.classList.remove("slipping"); }
     }
-    // 상태 관리: 부상
     else if(h.isInjured) {
-      speed *= 0.1;
-      h.injuryTime -= delta;
-      if(h.injuryTime <= 0) {
-        h.isInjured = false;
-        h.el.classList.remove("injured");
-      }
+      currentSpeed *= 0.2; // 부상 시 매우 느림
+      h.injuryDuration -= dt;
+      if(h.injuryDuration <= 0) { h.isInjured = false; h.el.classList.remove("injured"); }
     }
-    // 상태 관리: 부스터
     else if(h.isBoosting) {
-      speed *= 4.5;
-      h.boostTime -= delta;
-      if(h.boostTime <= 0) {
-        h.isBoosting = false;
-        h.el.classList.remove("boosting");
-      }
+      currentSpeed *= 4.0; // 부스터
+      h.boostDuration -= dt;
+      if(h.boostDuration <= 0) { h.isBoosting = false; h.el.classList.remove("boosting"); }
     }
-    // 일반 주행 중 이벤트 트리거
     else {
-      // 1. 바나나 던지기
-      if(!h.bananaUsed && progress > h.bananaTrigger) {
+      // 일반 주행 중 이벤트 체크
+      
+      // 1. 바나나 (앞사람 공격)
+      if(!h.bananaUsed && progress > h.nextBanana) {
         h.bananaUsed = true;
-        // 나보다 앞에 있는 랜덤 타겟
-        const targets = horses.filter(t => !t.finished && t.x > h.x && t !== h);
+        // 나보다 앞에 있는 사람 중 한 명
+        const targets = horses.filter(t => !t.finished && t.x > h.x);
         if(targets.length > 0) {
-          const target = targets[Math.floor(Math.random()*targets.length)];
-          target.isSlipping = true;
-          target.slipTime = 800;
-          target.isBoosting = false; target.el.classList.remove("boosting");
-          target.el.classList.add("slipping");
+          const victim = targets[Math.floor(Math.random()*targets.length)];
+          victim.isSlipping = true;
+          victim.slipDuration = 1000; // 1초간 미끄러짐
+          victim.isBoosting = false; victim.el.classList.remove("boosting");
+          victim.el.classList.add("slipping");
         }
       }
-      // 2. 부상
-      if(!h.injuryUsed && progress > h.injuryTrigger && Math.random() < 0.3) {
-        h.injuryUsed = true;
-        h.isInjured = true;
-        h.injuryTime = 1000;
-        h.el.classList.add("injured");
-      }
-      // 3. 부스터 체크
-      if(h.boostTriggers.length > 0 && progress > h.boostTriggers[0]) {
-        h.boostTriggers.shift();
+
+      // 2. 부스터
+      if(progress > h.nextBoost && progress < h.nextBoost + 0.1) {
+        // 일회성 트리거를 위해 범위를 지나면 nextBoost 값을 2로 변경해버림
+        h.nextBoost = 2; 
         h.isBoosting = true;
-        h.boostTime = 800 + Math.random()*400;
+        h.boostDuration = 1500; // 1.5초 부스트
         h.el.classList.add("boosting");
       }
-      // 4. 막판 드라마
-      if(!h.finalDramaUsed && progress > h.finalDramaTrigger) {
-        h.finalDramaUsed = true;
-        if(h.finalDrama === 'boost') {
+
+      // 3. 부상 (랜덤)
+      if(progress > h.nextInjury && progress < h.nextInjury + 0.1 && Math.random() < 0.02) {
+        h.nextInjury = 2;
+        h.isInjured = true;
+        h.injuryDuration = 1200;
+        h.el.classList.add("injured");
+      }
+
+      // 4. 막판 스퍼트/좌절
+      if(!h.dramaUsed && progress > h.finalDrama) {
+        h.dramaUsed = true;
+        if(h.finalAction === 'boost') {
           h.isBoosting = true;
-          h.boostTime = 1500;
+          h.boostDuration = 2500; // 결승선까지 쭉
           h.el.classList.add("boosting");
         } else {
           h.isInjured = true;
-          h.injuryTime = 1200;
+          h.injuryDuration = 1500;
           h.el.classList.add("injured");
         }
       }
     }
 
-    // 이동
-    h.x += (speed * delta) / 1000 * 4.0; // 속도 배율
+    // 실제 이동 적용 (속도 계수 조절: 0.3)
+    // dt는 약 16ms. speed가 20일 때 -> 20 * 16 / 1000 * 0.3 ~= 0.1px/frame (너무 느림)
+    // 10초 목표면 프레임당 약 1.6px (1000px 기준)
+    // speed 20 * 16 / 1000 * K = 1.6 -> K = 5.0 정도 필요
+    const move = (currentSpeed * dt) / 1000 * 3.5; 
+    h.x += move;
 
-    // 골인 처리
+    // 결승선 통과
     if(h.x >= finishX) {
       h.x = finishX;
       h.finished = true;
       h.el.classList.remove("boosting", "injured", "slipping");
       finishedOrder.push(h);
-      
-      // 겹치지 않게 시각적 오프셋
-      h.x += (10 - finishedOrder.length) * 5; 
+      // 겹침 방지 (도착 순서대로 약간 오른쪽으로)
+      h.x += (FIXED_NAMES.length - finishedOrder.length) * 15;
     }
 
-    h.el.style.transform = `translate(${h.x}px, -50%)`;
+    h.el.style.transform = `translateX(${h.x}px)`;
   });
 
-  // 모든 말이 들어오거나, 상위 4등이 정해지고 꼴찌 그룹이 너무 멀면 종료 가능하지만
-  // 여기선 전체 완주 혹은 4등까지만 기다림
-  const totalRunners = horses.length;
-  const maxWait = Math.min(4, totalRunners);
-  
-  if(finishedOrder.length >= maxWait) {
-    // 살짝 딜레이 후 결과창
-    setTimeout(showResult, 1000);
+  if(finishedOrder.length === horses.length) {
     raceRunning = false;
-    stopMusic(); // 음악 정지
+    stopMusic();
+    setTimeout(showResult, 1200);
   } else {
     animationFrameId = requestAnimationFrame(loop);
   }
 }
 
-function showResult() {
+function startRace() {
   const mode = document.querySelector('input[name="mode"]:checked').value;
-  const prizes = (mode === 'match') ? parseLines(prizeInput.value) : [];
-  
-  // 셔플된 상금 풀 만들기
-  let prizePool = [];
-  if(mode === 'match') {
-    // 넉넉하게 복사해서 섞음
-    let temp = [...prizes, ...prizes, ...prizes]; 
-    for(let i=temp.length-1; i>0; i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [temp[i], temp[j]] = [temp[j], temp[i]];
-    }
-    prizePool = temp;
+  if(mode === 'match' && parseLines(prizeInput.value).length < 1) {
+    alert("상품/벌칙 항목을 입력해주세요!");
+    return;
   }
 
-  const winner = finishedOrder[0];
-  document.getElementById("winnerName").textContent = `1등: ${winner.name}`;
-  document.getElementById("winnerGroup").textContent = `[${winner.groupName}]`;
+  // UI 잠금
+  startBtn.disabled = true;
+  resetBtn.disabled = true;
+  document.querySelectorAll('input').forEach(i => i.disabled = true);
+  document.getElementById("winnerOverlay").classList.add("hidden");
+
+  playMusic();
+  setupRace();
   
-  const wPhoto = document.getElementById("winnerPhoto");
-  wPhoto.innerHTML = "";
+  raceRunning = true;
+  lastTime = null;
+  document.getElementById("raceStatus").textContent = "🔥 레이스 진행 중! (약 15초 소요)";
+  
+  requestAnimationFrame(loop);
+}
+
+function showResult() {
+  const winner = finishedOrder[0];
+  const mode = document.querySelector('input[name="mode"]:checked').value;
+  let prizes = [];
+  
+  if(mode === 'match') {
+    // 상품 섞기
+    const raw = parseLines(prizeInput.value);
+    // 넉넉히 복제 후 셔플
+    let pool = [...raw, ...raw, ...raw];
+    pool.sort(() => Math.random() - 0.5);
+    prizes = pool;
+  }
+
+  document.getElementById("winnerName").textContent = `1등: ${winner.name}`;
+  const ph = document.getElementById("winnerPhoto");
+  ph.innerHTML = "";
   if(winner.imgUrl) {
     const img = document.createElement("img");
     img.src = winner.imgUrl;
-    wPhoto.appendChild(img);
+    ph.appendChild(img);
   } else {
-    wPhoto.innerHTML = "<span style='font-size:4rem'>🏃</span>";
+    ph.innerHTML = "<span style='font-size:4rem'>🎉</span>";
   }
 
-  // 랭킹 리스트 생성
-  const listEl = document.getElementById("rankList");
-  listEl.innerHTML = "";
+  const list = document.getElementById("rankList");
+  list.innerHTML = "";
   
-  const showCount = Math.min(finishedOrder.length, 4); // 4등까지만 표시
-  
-  let prizeCursor = 0;
-
-  for(let i=0; i<showCount; i++) {
-    const h = finishedOrder[i];
+  let pIndex = 0;
+  finishedOrder.forEach((h, idx) => {
     const row = document.createElement("div");
     row.className = "rank-row";
     
-    // 사진/이모지
-    let iconHTML = h.imgUrl 
-      ? `<img src="${h.imgUrl}" class="rank-img-small">` 
-      : `<span style="font-size:1.5rem; width:50px; text-align:center;">🏃</span>`;
-
-    // 상품 배정 로직
-    let assignedPrize = "";
+    // 상품 배정
+    let myPrize = "";
     if(mode === 'match') {
-        // 기본 1개 뽑기
-        let p1 = prizePool[prizeCursor++] || "꽝";
-        assignedPrize = p1;
-
-        // 사역캠퍼스 그룹 특전: 하나 더!
-        if(h.groupName === "사역캠퍼스") {
-             let p2 = prizePool[prizeCursor++] || "꽝";
-             assignedPrize = `① ${p1}, ② ${p2}`;
-        }
+      let p1 = prizes[pIndex++] || "없음";
+      myPrize = p1;
+      // 사역캠퍼스 특전: 2개
+      if(h.name === "사역캠퍼스") {
+        let p2 = prizes[pIndex++] || "없음";
+        myPrize = `1️⃣ ${p1}, 2️⃣ ${p2}`;
+      }
     }
 
     row.innerHTML = `
-      <div class="rank-info">
-        ${iconHTML}
-        <div class="rank-text">
-          <span class="rank-badge">${i+1}등</span>
-          <span class="rank-n">${h.name}</span>
-          <span class="rank-g">${h.groupName}</span>
-        </div>
+      <div class="rank-left">
+        <span class="rank-badge">${idx+1}등</span>
+        <span class="rank-txt">${h.name}</span>
       </div>
-      <div class="rank-prize">${assignedPrize}</div>
+      <div class="rank-prize">${myPrize}</div>
     `;
-    listEl.appendChild(row);
-  }
+    list.appendChild(row);
+  });
 
   winnerOverlay.classList.remove("hidden");
   
-  // 버튼 활성화 복구
+  // UI 복구
   startBtn.disabled = false;
   resetBtn.disabled = false;
-  GROUPS.forEach(g => {
-    document.getElementById(g.elName).disabled = false;
-    document.getElementById(g.elFile).disabled = false;
-  });
+  document.querySelectorAll('input').forEach(i => i.disabled = false);
 }
 
-// --- 리셋 ---
-function fullReset() {
+// 이벤트
+startBtn.addEventListener("click", startRace);
+resetBtn.addEventListener("click", () => {
   stopMusic();
   raceRunning = false;
   cancelAnimationFrame(animationFrameId);
-  tracksEl.innerHTML = "";
-  horses = [];
-  document.getElementById("raceStatusLight").style.background = "#22c55e";
-  document.getElementById("raceStatusText").textContent = "대기 중...";
-  
-  // 입력값 초기화
-  GROUPS.forEach(g => {
-    document.getElementById(g.elName).value = "";
-    document.getElementById(g.elFile).value = "";
-  });
-  prizeInput.value = "";
-}
-
-// --- 이벤트 리스너 ---
-startBtn.addEventListener("click", startRace);
-resetBtn.addEventListener("click", fullReset);
-document.getElementById("closeWinnerBtn").addEventListener("click", () => winnerOverlay.classList.add("hidden"));
+  setupRace(); // 리셋 시 트랙 초기화
+  document.getElementById("raceStatus").textContent = "대기 중...";
+});
+document.getElementById("closeBtn").addEventListener("click", () => winnerOverlay.classList.add("hidden"));
 document.getElementById("replayBtn").addEventListener("click", () => {
   winnerOverlay.classList.add("hidden");
   startRace();
 });
+
+// 초기 로드 시 러너 배치 보여주기
+setupRace();
 
 </script>
 </body>
