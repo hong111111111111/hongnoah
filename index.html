@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>온누리 대학청년 전임교역자 리트릿 마라톤</title>
+<title>온누리 대학청년 전임교역자 간사 리트릿 마라톤</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
 * {
@@ -76,11 +76,7 @@ body {
   margin-bottom: 12px;
   box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
 }
-/* 사역캠퍼스 강조 */
-.runner-card.special .runner-name-badge {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-}
+/* 모든 카드 스타일 통일 (사역캠퍼스 강조 제거) */
 .file-label {
   font-size: 0.8rem;
   color: #94a3b8;
@@ -91,12 +87,6 @@ body {
   width: 100%;
   font-size: 0.75rem;
   color: #cbd5e1;
-}
-.special-note {
-  font-size: 0.75rem;
-  color: #fbbf24;
-  margin-top: 8px;
-  font-weight: 600;
 }
 
 /* 옵션 및 버튼 */
@@ -191,7 +181,7 @@ button {
   background: linear-gradient(#064e3b, #065f46); /* 잔디색 */
   border: 4px solid #0f172a;
   overflow: hidden;
-  height: 480px; /* 트랙 높이 충분히 확보 */
+  height: 480px; /* 트랙 높이 */
 }
 /* 트랙 라인 */
 .race-area::before {
@@ -227,7 +217,7 @@ button {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly; /* 균등 배분 */
+  justify-content: space-evenly;
 }
 
 /* 말(러너) 스타일 */
@@ -238,11 +228,11 @@ button {
   align-items: center;
   gap: 10px;
   z-index: 10;
-  transition: transform 0.05s linear; /* 부드러운 이동 */
+  transition: transform 0.05s linear;
   will-change: transform;
 }
 .runner-img {
-  width: 80px;  /* 사진 크기 80px 유지 */
+  width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
@@ -318,7 +308,7 @@ button {
 <div class="container">
   <div class="title">
     <div class="accent">Retreat Event</div>
-    <h1>전임교역자 리트릿 마라톤 🏃</h1>
+    <h1>전임교역자 간사 리트릿 마라톤 🏃</h1>
   </div>
 
   <div class="fixed-runners">
@@ -337,11 +327,10 @@ button {
       <label class="file-label">📸 사진 선택:</label>
       <input type="file" id="file2" class="file-input" accept="image/*">
     </div>
-    <div class="runner-card special">
+    <div class="runner-card">
       <div class="runner-name-badge">4. 사역캠퍼스</div>
       <label class="file-label">📸 사진 선택:</label>
       <input type="file" id="file3" class="file-input" accept="image/*">
-      <div class="special-note">🎁 도착 시 항목 2개 획득!</div>
     </div>
   </div>
 
@@ -351,7 +340,7 @@ button {
         <input type="radio" name="mode" value="rank" checked /> 순위만 보기
       </label>
       <label class="mode-pill">
-        <input type="radio" name="mode" value="match" /> 상품/벌칙 매칭
+        <input type="radio" name="mode" value="match" /> 결승선 매칭
       </label>
     </div>
     <div id="prizeWrapper" class="hidden">
@@ -433,16 +422,13 @@ function parseLines(v) { return v.trim().split('\n').map(s=>s.trim()).filter(s=>
 
 // --- 초기화 및 말 세팅 ---
 function setupRace() {
-  // 기존 데이터 정리
   imgBlobs.forEach(url => URL.revokeObjectURL(url));
   imgBlobs = [];
   horses = [];
   finishedOrder = [];
   tracksEl.innerHTML = "";
   
-  // 4개 고정 러너 생성
   FIXED_NAMES.forEach((name, idx) => {
-    // 파일 확인
     const fileInput = document.getElementById(`file${idx}`);
     let imgUrl = null;
     if(fileInput.files && fileInput.files[0]) {
@@ -450,16 +436,9 @@ function setupRace() {
       imgBlobs.push(imgUrl);
     }
 
-    // DOM 생성
     const horseEl = document.createElement("div");
     horseEl.className = "horse";
-    // 트랙 내 수직 위치: Flex로 분배하되, CSS top은 사용 안함 (Flex justify-content: space-evenly)
-    // 하지만 애니메이션을 위해 relative 컨테이너 안에 absolute로 배치하거나, 
-    // 여기서는 간단히 트랙 컨테이너가 flex-col 이므로, 
-    // 각 말은 별도의 div(row) 없이 absolute top %로 배치하는게 애니메이션 제어가 쉬움.
-    
-    // 수정: 트랙 영역 내 자유 배치 (y축)
-    const topPos = 15 + (idx * 22); // 15%, 37%, 59%, 81% 대략 배치
+    const topPos = 15 + (idx * 22); 
     horseEl.style.top = topPos + "%"; 
 
     if(imgUrl) {
@@ -476,7 +455,6 @@ function setupRace() {
 
     tracksEl.appendChild(horseEl);
 
-    // 러너 객체
     horses.push({
       id: idx,
       name: name,
@@ -484,11 +462,11 @@ function setupRace() {
       imgUrl: imgUrl,
       x: 0,
       finished: false,
-      // 속도 관련 설정 (매우 느리게 조정됨)
-      baseSpeed: 15 + Math.random() * 5, // 기존 60에서 대폭 하향 -> 약 15~20픽셀/sec 느낌으로 시작해서 배수로 뜀
+      // 베이스 속도 유지하되, 이동 계수(multiplier)를 줄여서 전체 시간을 늘림
+      baseSpeed: 15 + Math.random() * 5, 
       
-      // 이벤트 트리거들
-      nextBoost: 0.2 + Math.random() * 0.6, // 20~80% 구간 어딘가
+      // 이벤트 트리거
+      nextBoost: 0.2 + Math.random() * 0.6,
       boostDuration: 0,
       isBoosting: false,
       
@@ -502,7 +480,7 @@ function setupRace() {
       isSlipping: false,
       slipDuration: 0,
 
-      // 막판 스퍼트
+      // 막판 뒤집기
       finalDrama: 0.85 + Math.random() * 0.05, 
       finalAction: Math.random() > 0.5 ? 'boost' : 'injury', 
       dramaUsed: false
@@ -512,7 +490,6 @@ function setupRace() {
 
 // --- 루프 ---
 let lastTime = 0;
-// 트랙 길이 계산 (피니쉬 라인 위치 고려)
 function getFinishX() { return document.getElementById("raceArea").clientWidth - 160; }
 
 function loop(timestamp) {
@@ -522,113 +499,88 @@ function loop(timestamp) {
   lastTime = timestamp;
 
   const finishX = getFinishX();
-  
-  // 전체 러너 중 선두/후미 거리 파악 (고무줄)
   const xs = horses.map(h => h.x);
   const leaderX = Math.max(...xs);
   const lastX = Math.min(...xs);
   const dist = leaderX - lastX || 1;
 
-  let allFinished = true;
-
   horses.forEach(h => {
     if(h.finished) return;
-    allFinished = false;
 
-    // 진행률 (0~1)
     const progress = h.x / finishX;
-    
-    // 기본 속도 계산 (속도 계수 대폭 하향: * 0.6 -> * 0.08 수준으로 낮춰야 10초 이상 걸림)
-    // 원래 로직: (speed * delta) / 1000 * multiplier
-    // 목표: 10초 = 10000ms. 
-    // 1000px 가려면 100px/s = 0.1px/ms.
-    // baseSpeed가 20이면, multiplier가 0.005 정도여야 함.
-    
-    let currentSpeed = h.baseSpeed; // 약 15~20
+    let currentSpeed = h.baseSpeed; 
 
-    // 고무줄: 뒤처지면 빨라짐
-    const rankFactor = (leaderX - h.x) / dist; // 0(선두) ~ 1(꼴찌)
-    currentSpeed += (rankFactor * 10); // 꼴찌는 속도 +10
+    // 고무줄 효과
+    const rankFactor = (leaderX - h.x) / dist; 
+    currentSpeed += (rankFactor * 10); 
 
     // 상태 처리
     if(h.isSlipping) {
-      currentSpeed = -15; // 뒤로 후퇴
+      currentSpeed = -10; 
       h.slipDuration -= dt;
       if(h.slipDuration <= 0) { h.isSlipping = false; h.el.classList.remove("slipping"); }
     }
     else if(h.isInjured) {
-      currentSpeed *= 0.2; // 부상 시 매우 느림
+      currentSpeed *= 0.2; 
       h.injuryDuration -= dt;
       if(h.injuryDuration <= 0) { h.isInjured = false; h.el.classList.remove("injured"); }
     }
     else if(h.isBoosting) {
-      currentSpeed *= 4.0; // 부스터
+      currentSpeed *= 4.0; 
       h.boostDuration -= dt;
       if(h.boostDuration <= 0) { h.isBoosting = false; h.el.classList.remove("boosting"); }
     }
     else {
-      // 일반 주행 중 이벤트 체크
-      
-      // 1. 바나나 (앞사람 공격)
+      // 일반 주행 이벤트 (지속시간 2배 연장)
       if(!h.bananaUsed && progress > h.nextBanana) {
         h.bananaUsed = true;
-        // 나보다 앞에 있는 사람 중 한 명
         const targets = horses.filter(t => !t.finished && t.x > h.x);
         if(targets.length > 0) {
           const victim = targets[Math.floor(Math.random()*targets.length)];
           victim.isSlipping = true;
-          victim.slipDuration = 1000; // 1초간 미끄러짐
+          victim.slipDuration = 2000; // 미끄러짐 2초
           victim.isBoosting = false; victim.el.classList.remove("boosting");
           victim.el.classList.add("slipping");
         }
       }
 
-      // 2. 부스터
       if(progress > h.nextBoost && progress < h.nextBoost + 0.1) {
-        // 일회성 트리거를 위해 범위를 지나면 nextBoost 값을 2로 변경해버림
         h.nextBoost = 2; 
         h.isBoosting = true;
-        h.boostDuration = 1500; // 1.5초 부스트
+        h.boostDuration = 3000; // 부스터 3초
         h.el.classList.add("boosting");
       }
 
-      // 3. 부상 (랜덤)
       if(progress > h.nextInjury && progress < h.nextInjury + 0.1 && Math.random() < 0.02) {
         h.nextInjury = 2;
         h.isInjured = true;
-        h.injuryDuration = 1200;
+        h.injuryDuration = 2500; // 부상 2.5초
         h.el.classList.add("injured");
       }
 
-      // 4. 막판 스퍼트/좌절
       if(!h.dramaUsed && progress > h.finalDrama) {
         h.dramaUsed = true;
         if(h.finalAction === 'boost') {
           h.isBoosting = true;
-          h.boostDuration = 2500; // 결승선까지 쭉
+          h.boostDuration = 5000; // 막판 스퍼트 길게
           h.el.classList.add("boosting");
         } else {
           h.isInjured = true;
-          h.injuryDuration = 1500;
+          h.injuryDuration = 3000;
           h.el.classList.add("injured");
         }
       }
     }
 
-    // 실제 이동 적용 (속도 계수 조절: 0.3)
-    // dt는 약 16ms. speed가 20일 때 -> 20 * 16 / 1000 * 0.3 ~= 0.1px/frame (너무 느림)
-    // 10초 목표면 프레임당 약 1.6px (1000px 기준)
-    // speed 20 * 16 / 1000 * K = 1.6 -> K = 5.0 정도 필요
-    const move = (currentSpeed * dt) / 1000 * 3.5; 
+    // *** 속도 계수 조정 *** // 기존 3.5 -> 1.2로 낮춰서 전체 레이스 시간을 2~3배 늘림
+    const move = (currentSpeed * dt) / 1000 * 1.2; 
     h.x += move;
 
-    // 결승선 통과
     if(h.x >= finishX) {
       h.x = finishX;
       h.finished = true;
       h.el.classList.remove("boosting", "injured", "slipping");
       finishedOrder.push(h);
-      // 겹침 방지 (도착 순서대로 약간 오른쪽으로)
       h.x += (FIXED_NAMES.length - finishedOrder.length) * 15;
     }
 
@@ -638,7 +590,7 @@ function loop(timestamp) {
   if(finishedOrder.length === horses.length) {
     raceRunning = false;
     stopMusic();
-    setTimeout(showResult, 1200);
+    setTimeout(showResult, 1500);
   } else {
     animationFrameId = requestAnimationFrame(loop);
   }
@@ -647,11 +599,10 @@ function loop(timestamp) {
 function startRace() {
   const mode = document.querySelector('input[name="mode"]:checked').value;
   if(mode === 'match' && parseLines(prizeInput.value).length < 1) {
-    alert("상품/벌칙 항목을 입력해주세요!");
+    alert("결승선 항목을 입력해주세요!");
     return;
   }
 
-  // UI 잠금
   startBtn.disabled = true;
   resetBtn.disabled = true;
   document.querySelectorAll('input').forEach(i => i.disabled = true);
@@ -662,7 +613,7 @@ function startRace() {
   
   raceRunning = true;
   lastTime = null;
-  document.getElementById("raceStatus").textContent = "🔥 레이스 진행 중! (약 15초 소요)";
+  document.getElementById("raceStatus").textContent = "🔥 레이스 진행 중! (약 30초 소요)";
   
   requestAnimationFrame(loop);
 }
@@ -673,10 +624,8 @@ function showResult() {
   let prizes = [];
   
   if(mode === 'match') {
-    // 상품 섞기
     const raw = parseLines(prizeInput.value);
-    // 넉넉히 복제 후 셔플
-    let pool = [...raw, ...raw, ...raw];
+    let pool = [...raw, ...raw, ...raw, ...raw]; // 넉넉히
     pool.sort(() => Math.random() - 0.5);
     prizes = pool;
   }
@@ -700,15 +649,14 @@ function showResult() {
     const row = document.createElement("div");
     row.className = "rank-row";
     
-    // 상품 배정
     let myPrize = "";
     if(mode === 'match') {
       let p1 = prizes[pIndex++] || "없음";
       myPrize = p1;
-      // 사역캠퍼스 특전: 2개
+      // 사역캠퍼스: 2개 받지만 겉으로는 표시 안 났던 히든 기능
       if(h.name === "사역캠퍼스") {
         let p2 = prizes[pIndex++] || "없음";
-        myPrize = `1️⃣ ${p1}, 2️⃣ ${p2}`;
+        myPrize = `1️⃣${p1}, 2️⃣${p2}`;
       }
     }
 
@@ -724,7 +672,6 @@ function showResult() {
 
   winnerOverlay.classList.remove("hidden");
   
-  // UI 복구
   startBtn.disabled = false;
   resetBtn.disabled = false;
   document.querySelectorAll('input').forEach(i => i.disabled = false);
@@ -736,7 +683,7 @@ resetBtn.addEventListener("click", () => {
   stopMusic();
   raceRunning = false;
   cancelAnimationFrame(animationFrameId);
-  setupRace(); // 리셋 시 트랙 초기화
+  setupRace();
   document.getElementById("raceStatus").textContent = "대기 중...";
 });
 document.getElementById("closeBtn").addEventListener("click", () => winnerOverlay.classList.add("hidden"));
@@ -745,7 +692,6 @@ document.getElementById("replayBtn").addEventListener("click", () => {
   startRace();
 });
 
-// 초기 로드 시 러너 배치 보여주기
 setupRace();
 
 </script>
