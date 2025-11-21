@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>온누리 대학청년 전임교역자 간사 리트릿 마라톤</title>
+<title>온누리 대학청년 전임교역자 리트릿 마라톤</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
 * {
@@ -76,7 +76,6 @@ body {
   margin-bottom: 12px;
   box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
 }
-/* 모든 카드 스타일 통일 (사역캠퍼스 강조 제거) */
 .file-label {
   font-size: 0.8rem;
   color: #94a3b8;
@@ -119,13 +118,14 @@ body {
 }
 #prizeInput {
   width: 100%;
-  height: 60px;
+  height: 100px; /* 높이 약간 증가 */
   background: rgba(15, 23, 42, 0.8);
   border: 1px solid rgba(148, 163, 184, 0.4);
   border-radius: 8px;
   padding: 8px;
   color: #fff;
   resize: vertical;
+  line-height: 1.5;
 }
 
 .btn-row {
@@ -308,7 +308,7 @@ button {
 <div class="container">
   <div class="title">
     <div class="accent">Retreat Event</div>
-    <h1>전임교역자 간사 리트릿 마라톤 🏃</h1>
+    <h1>전임교역자 리트릿 마라톤 🏃</h1>
   </div>
 
   <div class="fixed-runners">
@@ -344,7 +344,7 @@ button {
       </label>
     </div>
     <div id="prizeWrapper" class="hidden">
-      <textarea id="prizeInput" placeholder="결승선 항목 입력 (예: 설거지, 커피쏘기, 칭찬하기 - 줄바꿈으로 구분)"></textarea>
+      <textarea id="prizeInput" placeholder="결승선 항목 입력"></textarea>
     </div>
     <div class="btn-row">
       <button id="startBtn">레이스 시작! 🏁</button>
@@ -412,9 +412,14 @@ const prizeWrapper = document.getElementById("prizeWrapper");
 const prizeInput = document.getElementById("prizeInput");
 const modeRadios = document.querySelectorAll('input[name="mode"]');
 
-// 모드 토글
+// 모드 토글 (자동 입력 기능 추가)
 modeRadios.forEach(r => r.addEventListener('change', () => {
-  prizeWrapper.classList.toggle('hidden', r.value !== 'match');
+  const isMatch = r.value === 'match';
+  prizeWrapper.classList.toggle('hidden', !isMatch);
+  if(isMatch) {
+    // 자동 입력
+    prizeInput.value = "최성민\n이서진\n신정금\n강유선\n서혜림";
+  }
 }));
 
 // 줄바꿈 파싱
@@ -462,7 +467,7 @@ function setupRace() {
       imgUrl: imgUrl,
       x: 0,
       finished: false,
-      // 베이스 속도 유지하되, 이동 계수(multiplier)를 줄여서 전체 시간을 늘림
+      // 느린 속도 (장거리 레이스)
       baseSpeed: 15 + Math.random() * 5, 
       
       // 이벤트 트리거
@@ -531,14 +536,14 @@ function loop(timestamp) {
       if(h.boostDuration <= 0) { h.isBoosting = false; h.el.classList.remove("boosting"); }
     }
     else {
-      // 일반 주행 이벤트 (지속시간 2배 연장)
+      // 일반 주행 이벤트
       if(!h.bananaUsed && progress > h.nextBanana) {
         h.bananaUsed = true;
         const targets = horses.filter(t => !t.finished && t.x > h.x);
         if(targets.length > 0) {
           const victim = targets[Math.floor(Math.random()*targets.length)];
           victim.isSlipping = true;
-          victim.slipDuration = 2000; // 미끄러짐 2초
+          victim.slipDuration = 2000; 
           victim.isBoosting = false; victim.el.classList.remove("boosting");
           victim.el.classList.add("slipping");
         }
@@ -547,14 +552,14 @@ function loop(timestamp) {
       if(progress > h.nextBoost && progress < h.nextBoost + 0.1) {
         h.nextBoost = 2; 
         h.isBoosting = true;
-        h.boostDuration = 3000; // 부스터 3초
+        h.boostDuration = 3000; 
         h.el.classList.add("boosting");
       }
 
       if(progress > h.nextInjury && progress < h.nextInjury + 0.1 && Math.random() < 0.02) {
         h.nextInjury = 2;
         h.isInjured = true;
-        h.injuryDuration = 2500; // 부상 2.5초
+        h.injuryDuration = 2500; 
         h.el.classList.add("injured");
       }
 
@@ -562,7 +567,7 @@ function loop(timestamp) {
         h.dramaUsed = true;
         if(h.finalAction === 'boost') {
           h.isBoosting = true;
-          h.boostDuration = 5000; // 막판 스퍼트 길게
+          h.boostDuration = 5000; 
           h.el.classList.add("boosting");
         } else {
           h.isInjured = true;
@@ -572,7 +577,7 @@ function loop(timestamp) {
       }
     }
 
-    // *** 속도 계수 조정 *** // 기존 3.5 -> 1.2로 낮춰서 전체 레이스 시간을 2~3배 늘림
+    // 속도 계수 1.2 (약 30초 레이스)
     const move = (currentSpeed * dt) / 1000 * 1.2; 
     h.x += move;
 
@@ -598,8 +603,10 @@ function loop(timestamp) {
 
 function startRace() {
   const mode = document.querySelector('input[name="mode"]:checked').value;
-  if(mode === 'match' && parseLines(prizeInput.value).length < 1) {
-    alert("결승선 항목을 입력해주세요!");
+  // 중복 없는 매칭을 위해 최소 5개 확인
+  const lines = parseLines(prizeInput.value);
+  if(mode === 'match' && lines.length < 5) {
+    alert("중복 없는 매칭을 위해 항목을 5개 이상 입력해주세요!");
     return;
   }
 
@@ -625,8 +632,17 @@ function showResult() {
   
   if(mode === 'match') {
     const raw = parseLines(prizeInput.value);
-    let pool = [...raw, ...raw, ...raw, ...raw]; // 넉넉히
-    pool.sort(() => Math.random() - 0.5);
+    
+    // 중복 제거 로직:
+    // 원본 배열(raw)을 복제하여 섞은 뒤(shuffle), 하나씩 꺼내씀(pop or shift)
+    // 이렇게 하면 중복 당첨이 발생하지 않음.
+    
+    let pool = [...raw];
+    // Fisher-Yates Shuffle
+    for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
     prizes = pool;
   }
 
@@ -644,18 +660,22 @@ function showResult() {
   const list = document.getElementById("rankList");
   list.innerHTML = "";
   
+  // prizes 배열에서 앞에서부터 하나씩 꺼내씀
   let pIndex = 0;
+  
   finishedOrder.forEach((h, idx) => {
     const row = document.createElement("div");
     row.className = "rank-row";
     
     let myPrize = "";
     if(mode === 'match') {
-      let p1 = prizes[pIndex++] || "없음";
+      // 첫 번째 항목 할당
+      let p1 = prizes[pIndex++] || "(없음)";
       myPrize = p1;
-      // 사역캠퍼스: 2개 받지만 겉으로는 표시 안 났던 히든 기능
+      
+      // 사역캠퍼스: 히든으로 하나 더 가져감
       if(h.name === "사역캠퍼스") {
-        let p2 = prizes[pIndex++] || "없음";
+        let p2 = prizes[pIndex++] || "(없음)";
         myPrize = `1️⃣${p1}, 2️⃣${p2}`;
       }
     }
